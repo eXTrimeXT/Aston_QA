@@ -17,3 +17,8 @@
 [Main](https://github.com/eXTrimeXT/Aston_QA/tree/lesson_4/src/Main.java)\
 [MyArrayDataException](https://github.com/eXTrimeXT/Aston_QA/tree/lesson_4/src/MyArrayDataException.java)\
 [MyArraySizeException](https://github.com/eXTrimeXT/Aston_QA/tree/lesson_4/src/MyArraySizeException.java)
+
+## Lesson 5
+[lesson_5](https://github.com/eXTrimeXT/Aston_QA/tree/lesson_5/src/)\
+[Задание 1](https://github.com/eXTrimeXT/Aston_QA/tree/lesson_5/src/lesson_5_number_1)\
+[Задание 2](https://github.com/eXTrimeXT/Aston_QA/tree/lesson_5/src/lesson_5_number_2)
