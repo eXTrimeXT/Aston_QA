@@ -22,3 +22,7 @@
 [lesson_5](https://github.com/eXTrimeXT/Aston_QA/tree/lesson_5/src/)\
 [Задание 1](https://github.com/eXTrimeXT/Aston_QA/tree/lesson_5/src/lesson_5_number_1)\
 [Задание 2](https://github.com/eXTrimeXT/Aston_QA/tree/lesson_5/src/lesson_5_number_2)
+
+## Lesson 6
+[Junit_5](https://github.com/eXTrimeXT/Aston_QA/tree/Lesson_7_junit_5/src/)\
+[TestNG](https://github.com/eXTrimeXT/Aston_QA/tree/Lesson_7_testng/src/)
