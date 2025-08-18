@@ -19,10 +19,11 @@ public class MtsTest {
     private final String SITE_URL = "https://www.mts.by/";
     private final String PHONE_NUMBER = "297777777";
     private final String DETAILS_LINK = "https://www.mts.by/help/poryadok-oplaty-i-bezopasnost-internet-platezhey/";
+    private final String PathToChromeDriver = "G:\\Programming\\ASTON_QA_Java\\Aston_QA\\src\\chromedriver-win64\\chromedriver.exe";
 
     @BeforeClass
     public void setup() {
-        System.setProperty("webdriver.chrome.driver", "G:\\Programming\\ASTON_QA_Java\\Aston_QA\\src\\chromedriver-win64\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", PathToChromeDriver);
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         driver.manage().window().maximize();
