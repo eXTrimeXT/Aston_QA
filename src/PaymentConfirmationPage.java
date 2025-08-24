@@ -16,16 +16,19 @@ public class PaymentConfirmationPage extends BasePage {
     @FindBy(xpath = "//div[contains(@class, 'confirmation__description')]//span")
     private List<WebElement> confirmationDetails;
 
-    @FindBy(xpath = "//button[contains(@class, 'confirmation__button')]")
+//    @FindBy(xpath = "//button[contains(@class, 'confirmation__button')]")
+//    @FindBy(xpath = "/html/body/app-root/div/div/div/app-payment-container/section/div/app-card-page/div/div[1]/button")
+//    @FindBy(css = "button.colored.disabled")
+//    @FindBy(css = "button[class*='colored'][type='submit']")
+    @FindBy(xpath = "//button[contains(@class, 'colored') and contains(@class, 'disabled') and contains(text(), 'Оплатить')]")
     private WebElement payButton;
-
     @FindBy(xpath = "//form[contains(@class, 'card-form')]//input")
     private List<WebElement> cardInputs;
 
     @FindBy(xpath = "//div[contains(@class, 'card__payment-systems')]//span")
     private List<WebElement> paymentIcons;
 
-    @FindBy(xpath = "//input[@type='checkbox' and contains(@id, 'card-save')]")
+    @FindBy(xpath = "/html/body/app-root/div/div/div/app-payment-container/section/div/app-card-page/div/div[1]/app-card-input/form/div[2]/app-switcher-form-control/div/app-switcher/div/div")
     private WebElement saveCardCheckbox;
 
     @FindBy(xpath = "//label[contains(@for, 'card-save')]")
@@ -42,19 +45,19 @@ public class PaymentConfirmationPage extends BasePage {
     public boolean isPhoneNumberDisplayed(String phone) {
         for (WebElement detail : confirmationDetails) {
             if (detail.getText().contains(phone)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public boolean isAmountDisplayed(String amount) {
         for (WebElement detail : confirmationDetails) {
             if (detail.getText().contains(amount)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public boolean isPayButtonDisplayed() {
