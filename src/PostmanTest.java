@@ -1,5 +1,6 @@
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static io.restassured.RestAssured.given;
@@ -41,19 +42,27 @@ public class PostmanTest {
 
     @Test
     public void testPostFormData() {
-        given()
-                .contentType(ContentType.URLENC)
+        Response response = given()
+                .contentType(ContentType.URLENC.withCharset("UTF-8"))
                 .formParam("foo1", "bar1")
                 .formParam("foo2", "bar2")
                 .when()
-                .post("/post")
-                .then()
-                .statusCode(500)
-                .body("data", nullValue())
-                .body("json", nullValue())
-                .body("headers", nullValue())
-                .body("headers.content-type", nullValue())
-                .body("url", nullValue());
+                .post("/post");
+
+        // Диагностика
+        System.out.println("Status: " + response.getStatusCode());
+        System.out.println("Headers: " + response.getHeaders());
+        System.out.println("Body: " + response.getBody().asString());
+
+        response.then()
+                .statusCode(200)
+                .body("form.foo1", equalTo("bar1"))
+                .body("form.foo2", equalTo("bar2"))
+                .body("data", notNullValue())
+                .body("json", notNullValue())
+                .body("headers", notNullValue())
+                .body("headers.content-type", containsString("application/x-www-form-urlencoded"))
+                .body("url", equalTo("https://postman-echo.com/post"));
     }
 
     @Test
