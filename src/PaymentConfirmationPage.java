@@ -21,7 +21,7 @@ public class PaymentConfirmationPage extends BasePage {
 //    @FindBy(css = "button.colored.disabled")
 //    @FindBy(css = "button[class*='colored'][type='submit']")
     @FindBy(xpath = "//button[contains(@class, 'colored') and contains(@class, 'disabled') and contains(text(), 'Оплатить')]")
-    private WebElement payButton;
+    public WebElement payButton;
     @FindBy(xpath = "//form[contains(@class, 'card-form')]//input")
     private List<WebElement> cardInputs;
 

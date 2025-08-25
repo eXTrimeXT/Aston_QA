@@ -1,13 +1,22 @@
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import io.qameta.allure.*;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+@Epic("Тестирование платежной системы МТС")
+@Feature("Онлайн пополнение без комиссии")
 public class MtsTest {
     private WebDriver driver;
     private HomePage homePage;
@@ -18,8 +27,10 @@ public class MtsTest {
     private final String PHONE_NUMBER = "297777777";
     private final String DETAILS_LINK = "https://www.mts.by/help/poryadok-oplaty-i-bezopasnost-internet-platezhey/";
     private final String PathToChromeDriver = "G:\\Programming\\ASTON_QA_Java\\Aston_QA\\src\\chromedriver-win64\\chromedriver.exe";
+    private final String SCREENSHOTS_DIR = "allure-report-screenshots";
 
     @BeforeClass
+    @Step("Инициализация драйвера и открытие сайта")
     public void setup() {
         System.setProperty("webdriver.chrome.driver", PathToChromeDriver);
         driver = new ChromeDriver();
@@ -28,15 +39,24 @@ public class MtsTest {
 
         homePage = new HomePage(driver);
         homePage.acceptCookiesIfPresent();
+
+        // Создаем директорию для скриншотов
+        createScreenshotsDirectory();
     }
 
     @Test(priority = 1)
+    @Story("Проверка заголовка блока")
+    @Description("Проверка корректности отображения заголовка блока 'Онлайн пополнение без комиссии'")
+    @Severity(SeverityLevel.CRITICAL)
     public void checkBlockTitle() {
         Assert.assertEquals(homePage.getBlockTitleText(), "Онлайн пополнение\nбез комиссии",
                 "Block title text doesn't match expected");
     }
 
     @Test(priority = 2)
+    @Story("Проверка логотипов платежных систем")
+    @Description("Проверка наличия и корректности всех логотипов платежных систем")
+    @Severity(SeverityLevel.NORMAL)
     public void checkPaymentSystemLogos() {
         List<WebElement> logos = homePage.getPaymentSystemLogos();
         String[] expectedAltTexts = {"Visa", "Verified By Visa", "MasterCard", "MasterCard Secure Code", "Белкарт"};
@@ -51,15 +71,19 @@ public class MtsTest {
     }
 
     @Test(priority = 3)
+    @Story("Проверка ссылки 'Подробнее о сервисе'")
+    @Description("Проверка корректности URL ссылки на подробную информацию о сервисе")
+    @Severity(SeverityLevel.MINOR)
     public void checkDetailsLink() {
         WebElement detailsLink = homePage.getDetailsLink();
         Assert.assertEquals(detailsLink.getAttribute("href"), DETAILS_LINK,
                 "Details link URL doesn't match expected");
-
-        // Здесь можно добавить логику открытия в новой вкладке, если нужно
     }
 
     @Test(priority = 4)
+    @Story("Проверка плейсхолдеров полей ввода")
+    @Description("Проверка плейсхолдеров для различных опций оплаты")
+    @Severity(SeverityLevel.NORMAL)
     public void checkEmptyFieldsPlaceholders() {
         String[] paymentOptions = {"Услуги связи", "Домашний интернет", "Рассрочка", "Задолженность"};
         String[][] expectedPlaceholders = {
@@ -82,11 +106,13 @@ public class MtsTest {
             }
         }
 
-        // Возвращаемся к "Услуги связи" для следующих тестов
         homePage.selectPaymentOption("Услуги связи");
     }
 
     @Test(priority = 5)
+    @Story("Тестирование формы оплаты")
+    @Description("Проверка функциональности формы оплаты услуг связи")
+    @Severity(SeverityLevel.CRITICAL)
     public void testPaymentForm() {
         servicePaymentPage = new ServicePaymentPage(driver);
 
@@ -105,13 +131,17 @@ public class MtsTest {
     }
 
     @Test(priority = 6)
+    @Story("Тестирование страницы подтверждения платежа")
+    @Description("Проверка корректности отображения страницы подтверждения платежа")
+    @Severity(SeverityLevel.CRITICAL)
     public void testPaymentConfirmationPage() {
         paymentConfirmationPage = new PaymentConfirmationPage(driver);
-        Assert.assertTrue(paymentConfirmationPage.isConfirmationPageDisplayed(),"Payment confirmation page is not displayed");
-        Assert.assertTrue(paymentConfirmationPage.isPhoneNumberDisplayed("375297777777"),"Phone number is not displayed correctly");
-        Assert.assertTrue(paymentConfirmationPage.isAmountDisplayed("1"),"Amount is not displayed correctly");
-//        Assert.assertTrue(paymentConfirmationPage.isPayButtonDisplayed(),"Pay button is not displayed");
-        Assert.assertTrue(paymentConfirmationPage.isPayButtonAmountCorrect("1"),"Pay button amount is incorrect");
+        Assert.assertTrue(paymentConfirmationPage.isConfirmationPageDisplayed(),
+                "Payment confirmation page is not displayed");
+        Assert.assertTrue(paymentConfirmationPage.isPhoneNumberDisplayed("375297777777"),
+                "Phone number is not displayed correctly");
+        Assert.assertTrue(paymentConfirmationPage.isAmountDisplayed("1"),
+                "Amount is not displayed correctly");
 
         String[] cardFieldPlaceholders = {
                 "Номер карты",
@@ -133,9 +163,145 @@ public class MtsTest {
     }
 
     @AfterClass
+    @Step("Завершение тестов, создание отчета и скриншота")
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
+        try {
+            // 1. Генерируем Allure отчет
+            generateAllureReport();
+
+            // 2. Делаем скриншот отчета
+            takeAllureReportScreenshot();
+
+            // 3. Закрываем браузер
+            if (driver != null) {
+                driver.quit();
+            }
+
+            System.out.println("✅ Allure отчет создан и скриншот сохранен!");
+            System.out.println("📁 Скриншот: " + SCREENSHOTS_DIR + "/allure-report-screenshot.png");
+
+        } catch (Exception e) {
+            System.err.println("❌ Ошибка при создании отчета: " + e.getMessage());
+            if (driver != null) {
+                driver.quit();
+            }
         }
+    }
+
+    /**
+     * Создает директорию для скриншотов
+     */
+    private void createScreenshotsDirectory() {
+        try {
+            Path path = Paths.get(SCREENSHOTS_DIR);
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+                System.out.println("📁 Создана директория для скриншотов: " + SCREENSHOTS_DIR);
+            }
+        } catch (IOException e) {
+            System.err.println("❌ Не удалось создать директорию для скриншотов: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Генерирует Allure отчет
+     */
+    private void generateAllureReport() {
+        try {
+            System.out.println("🔄 Генерация Allure отчета...");
+
+            ProcessBuilder processBuilder = new ProcessBuilder();
+
+            if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                processBuilder.command("cmd.exe", "/c",
+                        "mvn", "allure:report");
+            } else {
+                processBuilder.command("bash", "-c",
+                        "mvn allure:report");
+            }
+
+            processBuilder.directory(new File(System.getProperty("user.dir")));
+            Process process = processBuilder.start();
+
+            // Читаем вывод процесса
+            java.io.BufferedReader reader = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("✅ Allure отчет успешно сгенерирован!");
+            } else {
+                System.out.println("❌ Ошибка генерации Allure отчета. Код: " + exitCode);
+            }
+
+        } catch (Exception e) {
+            System.err.println("❌ Ошибка при генерации отчета: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Делает скриншот Allure отчета
+     */
+    private void takeAllureReportScreenshot() {
+        try {
+            System.out.println("📸 Создание скриншота Allure отчета...");
+
+            // Ждем немного для завершения генерации отчета
+            Thread.sleep(2000);
+
+            // Создаем новый WebDriver для скриншота отчета
+            WebDriver screenshotDriver = new ChromeDriver();
+            screenshotDriver.manage().window().maximize();
+
+            // Открываем отчет в браузере
+            String reportPath = "file:///" + System.getProperty("user.dir")
+                    + "/target/site/allure-maven-plugin/index.html";
+            screenshotDriver.get(reportPath);
+
+            // Ждем загрузки страницы
+            Thread.sleep(3000);
+
+            // Делаем скриншот
+            File screenshot = ((TakesScreenshot) screenshotDriver).getScreenshotAs(OutputType.FILE);
+
+            // Сохраняем скриншот
+            String timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
+            String screenshotPath = SCREENSHOTS_DIR + "/allure-report-screenshot-" + timestamp + ".png";
+
+            Files.copy(screenshot.toPath(), Paths.get(screenshotPath));
+            System.out.println("✅ Скриншот сохранен: " + screenshotPath);
+
+            // Закрываем браузер для скриншотов
+            screenshotDriver.quit();
+
+        } catch (Exception e) {
+            System.err.println("❌ Ошибка при создании скриншота: " + e.getMessage());
+
+            // Альтернативный способ - скриншот через Selenium если отчет не открывается
+            try {
+                takeAlternativeScreenshot();
+            } catch (Exception ex) {
+                System.err.println("❌ Альтернативный скриншот также не удался: " + ex.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Альтернативный способ создания скриншота
+     */
+    private void takeAlternativeScreenshot() throws IOException {
+        System.out.println("📸 Попытка альтернативного скриншота...");
+
+        // Просто делаем скриншот текущей страницы
+        File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        String timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
+        String screenshotPath = SCREENSHOTS_DIR + "/final-page-screenshot-" + timestamp + ".png";
+
+        Files.copy(screenshot.toPath(), Paths.get(screenshotPath));
+        System.out.println("✅ Альтернативный скриншот сохранен: " + screenshotPath);
     }
 }

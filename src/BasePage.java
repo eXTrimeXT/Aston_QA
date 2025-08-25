@@ -1,3 +1,4 @@
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,19 +17,23 @@ public class BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    @Step("Кликнуть на элемент: {element}")
     protected void click(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element)).click();
     }
 
+    @Step("Ввести текст '{text}' в элемент: {element}")
     protected void type(WebElement element, String text) {
         wait.until(ExpectedConditions.visibilityOf(element)).clear();
         element.sendKeys(text);
     }
 
+    @Step("Проверить отображение элемента: {element}")
     protected boolean isElementDisplayed(WebElement element) {
         return wait.until(ExpectedConditions.visibilityOf(element)).isDisplayed();
     }
 
+    @Step("Принять cookies, если присутствуют")
     protected void acceptCookiesIfPresent() {
         try {
             WebElement acceptCookies = wait.until(ExpectedConditions.elementToBeClickable(
