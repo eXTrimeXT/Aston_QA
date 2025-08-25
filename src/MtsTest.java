@@ -26,7 +26,7 @@ public class MtsTest {
     private final String SITE_URL = "https://www.mts.by/";
     private final String PHONE_NUMBER = "297777777";
     private final String DETAILS_LINK = "https://www.mts.by/help/poryadok-oplaty-i-bezopasnost-internet-platezhey/";
-    private final String PathToChromeDriver = "G:\\Programming\\ASTON_QA_Java\\Aston_QA\\src\\chromedriver-win64\\chromedriver.exe";
+    private final String PathToChromeDriver = "C:\\Users\\Timur\\Downloads\\Aston_QA\\src\\chromedriver-win64\\chromedriver.exe";
     private final String SCREENSHOTS_DIR = "allure-report-screenshots";
 
     @BeforeClass

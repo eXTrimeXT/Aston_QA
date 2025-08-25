@@ -1,0 +1,7 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"Проверка плейсхолдеров для различных опций оплаты","1229","checkEmptyFieldsPlaceholders","Default Suite","Mon Aug 25 18:29:26 MSK 2025","passed","Mon Aug 25 18:29:27 MSK 2025","MtsTest","Aston_QA","MtsTest","checkEmptyFieldsPlaceholders"
+"Проверка наличия и корректности всех логотипов платежных систем","1562","checkPaymentSystemLogos","Default Suite","Mon Aug 25 18:29:24 MSK 2025","passed","Mon Aug 25 18:29:25 MSK 2025","MtsTest","Aston_QA","MtsTest","checkPaymentSystemLogos"
+"Проверка корректности отображения заголовка блока 'Онлайн пополнение без комиссии'","29","checkBlockTitle","Default Suite","Mon Aug 25 18:29:24 MSK 2025","passed","Mon Aug 25 18:29:24 MSK 2025","MtsTest","Aston_QA","MtsTest","checkBlockTitle"
+"Проверка корректности отображения страницы подтверждения платежа","6264","testPaymentConfirmationPage","Default Suite","Mon Aug 25 18:29:27 MSK 2025","passed","Mon Aug 25 18:29:33 MSK 2025","MtsTest","Aston_QA","MtsTest","testPaymentConfirmationPage"
+"Проверка корректности URL ссылки на подробную информацию о сервисе","106","checkDetailsLink","Default Suite","Mon Aug 25 18:29:25 MSK 2025","passed","Mon Aug 25 18:29:26 MSK 2025","MtsTest","Aston_QA","MtsTest","checkDetailsLink"
+"Проверка функциональности формы оплаты услуг связи","368","testPaymentForm","Default Suite","Mon Aug 25 18:29:27 MSK 2025","passed","Mon Aug 25 18:29:27 MSK 2025","MtsTest","Aston_QA","MtsTest","testPaymentForm"
